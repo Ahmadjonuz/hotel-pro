@@ -16,9 +16,6 @@ export default function TestPage() {
     setResult(null)
 
     try {
-      // Test the connection by trying to get the Supabase URL
-      const url = supabase.supabaseUrl
-
       // Try to query the database
       const { data, error } = await supabase.from("rooms").select("*").limit(5)
 
@@ -26,7 +23,6 @@ export default function TestPage() {
 
       setResult({
         connection: "Success",
-        url,
         data,
       })
     } catch (err: any) {
