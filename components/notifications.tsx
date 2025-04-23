@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Bell, Check, Clock, Info, MessageSquare, X } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Bell, Check, Clock, Info, MessageSquare, X, ArrowLeft } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,66 +13,79 @@ import {
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
-
-// Sample notification data
-const sampleNotifications = [
-  {
-    id: "1",
-    title: "Yangi bron",
-    message: "John Smith 101-xonani 15-18 aprel kunlariga band qildi",
-    time: "10 daqiqa oldin",
-    read: false,
-    type: "booking",
-  },
-  {
-    id: "2",
-    title: "Ro'yxatdan o'tish eslatmasi",
-    message: "Sarah Johnson bugun soat 14:00 da ro'yxatdan o'tadi",
-    time: "1 soat oldin",
-    read: false,
-    type: "reminder",
-  },
-  {
-    id: "3",
-    title: "Texnik xizmat murojaati",
-    message: "205-xonada konditsioner bilan muammo mavjud",
-    time: "3 soat oldin",
-    read: true,
-    type: "maintenance",
-  },
-  {
-    id: "4",
-    title: "To'lov qabul qilindi",
-    message: "#B-1001 bron uchun $349.99 to'lov qabul qilindi",
-    time: "5 soat oldin",
-    read: true,
-    type: "payment",
-  },
-  {
-    id: "5",
-    title: "Tozalash yangilanishi",
-    message: "310-xona tozalandi va tayyor",
-    time: "Kecha",
-    read: true,
-    type: "housekeeping",
-  },
-]
+import { useAuth } from "@/hooks/use-auth"
+import { notificationsService } from "@/services/notifications-service"
+import { Notification } from "@/types/notifications"
+import { formatDistanceToNow } from "date-fns"
+import { toast } from "@/components/ui/use-toast"
 
 export function NotificationCenter() {
-  const [notifications, setNotifications] = useState(sampleNotifications)
+  const { user } = useAuth()
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [open, setOpen] = useState(false)
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
-  const markAsRead = (id: string) => {
+  useEffect(() => {
+    if (user) {
+      loadNotifications()
+    }
+  }, [user])
+
+  const loadNotifications = async () => {
+    const { data, error } = await notificationsService.getNotifications(
+      { read: false },
+      10
+    )
+    if (error) {
+      toast({
+        title: "Xatolik yuz berdi",
+        description: error.message,
+        variant: "destructive",
+      })
+      return
+    }
+    if (data) {
+      setNotifications(data)
+    }
+  }
+
+  const markAsRead = async (id: string) => {
+    const { error } = await notificationsService.markAsRead([id])
+    if (error) {
+      toast({
+        title: "Xatolik yuz berdi",
+        description: error.message,
+        variant: "destructive",
+      })
+      return
+    }
     setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)))
   }
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
+    const { error } = await notificationsService.markAsRead()
+    if (error) {
+      toast({
+        title: "Xatolik yuz berdi",
+        description: error.message,
+        variant: "destructive",
+      })
+      return
+    }
     setNotifications(notifications.map((n) => ({ ...n, read: true })))
   }
 
-  const deleteNotification = (id: string) => {
+  const deleteNotification = async (id: string) => {
+    const { error } = await notificationsService.delete(id)
+    if (error) {
+      toast({
+        title: "Xatolik yuz berdi",
+        description: error.message,
+        variant: "destructive",
+      })
+      return
+    }
     setNotifications(notifications.filter((n) => n.id !== id))
   }
 
@@ -93,6 +106,10 @@ export function NotificationCenter() {
     }
   }
 
+  const formatTime = (date: string) => {
+    return formatDistanceToNow(new Date(date), { addSuffix: true })
+  }
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -107,7 +124,15 @@ export function NotificationCenter() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         <DropdownMenuLabel className="flex items-center justify-between">
-          <span>Bildirishnomalar</span>
+          <div className="flex items-center gap-2">
+            {open && (
+              <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2" onClick={() => setOpen(false)}>
+                <ArrowLeft className="h-4 w-4" />
+                <span className="sr-only">Ortga</span>
+              </Button>
+            )}
+            <span>Bildirishnomalar</span>
+          </div>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
@@ -135,7 +160,9 @@ export function NotificationCenter() {
                       <div>
                         <div className="font-medium">{notification.title}</div>
                         <div className="text-sm text-muted-foreground">{notification.message}</div>
-                        <div className="mt-1 text-xs text-muted-foreground">{notification.time}</div>
+                        <div className="mt-1 text-xs text-muted-foreground">
+                          {formatTime(notification.created_at)}
+                        </div>
                       </div>
                     </div>
                     <div className="flex gap-1 ml-2">

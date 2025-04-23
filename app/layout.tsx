@@ -5,16 +5,20 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "sonner"
 import { AuthProvider } from "@/contexts/auth-context"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { LoadingPage } from "@/components/loading"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
-  title: "HotelPro - Zamonaviy mehmonxona boshqaruv tizimi",
-  description: "Mehmonxona bron qilish va boshqarish uchun mukammal yechim",
-  generator: 'v0.dev'
+  title: "HotelPro - Mehmonxona boshqaruv tizimi",
+  description: "Professional hotel management system",
 }
 
 export default function RootLayout({
@@ -23,7 +27,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <head>
+        {/* Force add Tailwind CDN as backup */}
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
@@ -32,6 +41,7 @@ export default function RootLayout({
                 {children}
               </Suspense>
               <Toaster />
+              <SonnerToaster position="top-right" />
             </ErrorBoundary>
           </ThemeProvider>
         </AuthProvider>
@@ -39,7 +49,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-
-import './globals.css'

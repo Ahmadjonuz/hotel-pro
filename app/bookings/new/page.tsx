@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Home, ArrowLeft, Calendar, Users, CreditCard } from "lucide-react"
 import { format } from "date-fns"
+import { toast } from "@/components/ui/use-toast"
 
 import { Button } from "@/components/ui/button"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
@@ -19,6 +20,24 @@ import { RoomSelector } from "@/components/room-selector"
 export default function NewBookingPage() {
   const [checkInDate, setCheckInDate] = useState<Date>()
   const [checkOutDate, setCheckOutDate] = useState<Date>()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      // ... existing submit logic ...
+      toast({
+        title: "Muvaffaqiyatli",
+        description: "Bron muvaffaqiyatli yaratildi",
+      })
+    } catch (error) {
+      console.error("Bron yaratishda xatolik:", error)
+      toast({
+        title: "Xatolik",
+        description: "Bronni yaratishda xatolik yuz berdi",
+        variant: "destructive",
+      })
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -53,16 +72,18 @@ export default function NewBookingPage() {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Bookings
           </Link>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight">New Booking</h1>
-          <p className="text-muted-foreground">Create a new reservation in the system</p>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight">Yangi bron</h1>
+          <p className="text-muted-foreground">Yangi bron yaratish uchun quyidagi formani to'ldiring</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Booking Details</CardTitle>
-                <CardDescription>Enter the reservation information</CardDescription>
+                <CardTitle>Bron ma'lumotlari</CardTitle>
+                <CardDescription>
+                  Asosiy bron ma'lumotlarini kiriting
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -107,44 +128,49 @@ export default function NewBookingPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="guests">Number of Guests</Label>
+                  <Label htmlFor="guests">Mehmonlar soni</Label>
                   <div className="flex items-center space-x-2">
                     <Users className="h-4 w-4 text-muted-foreground" />
                     <Select defaultValue="2">
                       <SelectTrigger id="guests" className="w-full">
-                        <SelectValue placeholder="Select" />
+                        <SelectValue placeholder="Tanlang" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="1">1 Guest</SelectItem>
-                        <SelectItem value="2">2 Guests</SelectItem>
-                        <SelectItem value="3">3 Guests</SelectItem>
-                        <SelectItem value="4">4 Guests</SelectItem>
-                        <SelectItem value="5">5 Guests</SelectItem>
-                        <SelectItem value="6">6+ Guests</SelectItem>
+                        <SelectItem value="1">1 mehmon</SelectItem>
+                        <SelectItem value="2">2 mehmon</SelectItem>
+                        <SelectItem value="3">3 mehmon</SelectItem>
+                        <SelectItem value="4">4 mehmon</SelectItem>
+                        <SelectItem value="5">5 mehmon</SelectItem>
+                        <SelectItem value="6">6+ mehmon</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="room-type">Room Type</Label>
+                  <Label htmlFor="room-type">Xona turi</Label>
                   <Select defaultValue="standard">
                     <SelectTrigger id="room-type" className="w-full">
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Tanlang" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="standard">Standard Room</SelectItem>
-                      <SelectItem value="deluxe">Deluxe Room</SelectItem>
-                      <SelectItem value="suite">Suite</SelectItem>
-                      <SelectItem value="executive">Executive Suite</SelectItem>
+                      <SelectItem value="standard">Standart xona</SelectItem>
+                      <SelectItem value="deluxe">Deluxe xona</SelectItem>
+                      <SelectItem value="suite">Lyuks</SelectItem>
+                      <SelectItem value="executive">Executive lyuks</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Special Requests</Label>
-                  <Textarea placeholder="Enter any special requests or requirements" />
+                  <Label>Maxsus so'rovlar</Label>
+                  <Textarea placeholder="Maxsus so'rovlar yoki talablarni kiriting" />
                 </div>
+
+                <Button className="w-full">
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  Bronni yaratish
+                </Button>
               </CardContent>
             </Card>
 

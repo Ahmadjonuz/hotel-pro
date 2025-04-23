@@ -5,14 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { formatCurrency } from "@/lib/utils"
 
-// Sample room data
+// Sample room data with UZS prices
 const rooms = [
   {
     id: "101",
     type: "Standard",
     capacity: 2,
-    price: 99.99,
+    price: 1300000, // ~$100
     status: "available",
     amenities: ["wifi", "tv", "coffee"],
     description: "Comfortable room with a queen-sized bed and city view.",
@@ -21,7 +22,7 @@ const rooms = [
     id: "102",
     type: "Standard",
     capacity: 2,
-    price: 99.99,
+    price: 1300000, // ~$100
     status: "occupied",
     amenities: ["wifi", "tv", "coffee"],
     description: "Comfortable room with a queen-sized bed and garden view.",
@@ -30,7 +31,7 @@ const rooms = [
     id: "201",
     type: "Deluxe",
     capacity: 3,
-    price: 149.99,
+    price: 1950000, // ~$150
     status: "available",
     amenities: ["wifi", "tv", "coffee", "minibar"],
     description: "Spacious room with a king-sized bed and premium amenities.",
@@ -39,7 +40,7 @@ const rooms = [
     id: "202",
     type: "Deluxe",
     capacity: 3,
-    price: 149.99,
+    price: 1950000, // ~$150
     status: "cleaning",
     amenities: ["wifi", "tv", "coffee", "minibar"],
     description: "Spacious room with a king-sized bed and premium amenities.",
@@ -48,7 +49,7 @@ const rooms = [
     id: "301",
     type: "Suite",
     capacity: 4,
-    price: 249.99,
+    price: 3250000, // ~$250
     status: "maintenance",
     amenities: ["wifi", "tv", "coffee", "minibar", "jacuzzi"],
     description: "Luxury suite with separate living area and panoramic views.",
@@ -57,7 +58,7 @@ const rooms = [
     id: "302",
     type: "Suite",
     capacity: 4,
-    price: 249.99,
+    price: 3250000, // ~$250
     status: "available",
     amenities: ["wifi", "tv", "coffee", "minibar", "jacuzzi"],
     description: "Luxury suite with separate living area and panoramic views.",
@@ -154,8 +155,8 @@ export function RoomsGrid() {
           </CardContent>
           <CardFooter className="flex items-center justify-between border-t pt-3">
             <div className="font-semibold">
-              ${room.price.toFixed(2)}
-              <span className="text-sm font-normal text-muted-foreground">/night</span>
+              {formatCurrency(room.price)}
+              <span className="text-sm font-normal text-muted-foreground">/tun</span>
             </div>
             <Button variant="outline" size="sm">
               View Details

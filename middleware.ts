@@ -1,41 +1,31 @@
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs"
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
-
-  // Refresh session if expired
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  // Get the pathname from the URL
-  const pathname = req.nextUrl.pathname
-
-  // If there's a session and trying to access root, redirect to dashboard
-  if (session && pathname === '/') {
-    const url = req.nextUrl.clone()
-    url.pathname = '/dashboard'
-    url.search = ''
-    return NextResponse.redirect(url)
+export function middleware(req: NextRequest) {
+  // Get the pathname
+  const path = req.nextUrl.pathname
+  
+  // Skip middleware for non-dashboard routes
+  if (!path.startsWith('/dashboard')) {
+    return NextResponse.next()
   }
-
+  
+  // Check for auth cookie
+  const hasSbAuthCookie = req.cookies.has('sb-access-token') || 
+                          req.cookies.has('sb-refresh-token')
+  
+  // Add debug header
+  const res = NextResponse.next()
+  res.headers.set('x-debug-has-auth-cookie', hasSbAuthCookie ? 'true' : 'false')
+  
+  // Redirect to home/login if not authenticated
+  if (!hasSbAuthCookie) {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+  
   return res
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|public/).*)'
-  ],
-}
-
+  matcher: ['/dashboard/:path*'],
+} 

@@ -5,31 +5,32 @@ import { BedDouble, Check } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import { formatCurrency } from "@/lib/utils"
 
-// Sample available rooms
+// Sample available rooms with UZS prices
 const availableRooms = [
   {
     id: "101",
     type: "Standard",
-    price: 99.99,
+    price: 1300000, // ~$100
     features: ["Queen Bed", "City View", '32" TV'],
   },
   {
     id: "103",
     type: "Standard",
-    price: 99.99,
+    price: 1300000, // ~$100
     features: ["Queen Bed", "Garden View", '32" TV'],
   },
   {
     id: "201",
     type: "Deluxe",
-    price: 149.99,
+    price: 1950000, // ~$150
     features: ["King Bed", "City View", '42" TV', "Mini Bar"],
   },
   {
     id: "301",
     type: "Suite",
-    price: 249.99,
+    price: 3250000, // ~$250
     features: ["King Bed", "Separate Living Area", '55" TV', "Jacuzzi"],
   },
 ]
@@ -59,8 +60,8 @@ export function RoomSelector() {
                     <Badge variant="outline">{room.type}</Badge>
                   </div>
                   <div className="font-semibold">
-                    ${room.price.toFixed(2)}
-                    <span className="text-sm font-normal text-muted-foreground">/night</span>
+                    {formatCurrency(room.price)}
+                    <span className="text-sm font-normal text-muted-foreground">/tun</span>
                   </div>
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">

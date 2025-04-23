@@ -1,3 +1,17 @@
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS maintenance_requests CASCADE;
+DROP TABLE IF EXISTS housekeeping_tasks CASCADE;
+DROP TABLE IF EXISTS bookings CASCADE;
+DROP TABLE IF EXISTS guests CASCADE;
+DROP TABLE IF EXISTS rooms CASCADE;
+
+-- Drop existing types if they exist
+DROP TYPE IF EXISTS room_status CASCADE;
+DROP TYPE IF EXISTS booking_status CASCADE;
+DROP TYPE IF EXISTS payment_status CASCADE;
+DROP TYPE IF EXISTS task_status CASCADE;
+DROP TYPE IF EXISTS task_priority CASCADE;
+
 -- Create rooms table
 CREATE TABLE IF NOT EXISTS rooms (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -35,7 +49,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   status TEXT NOT NULL,
   total_amount DECIMAL(10, 2) NOT NULL,
   payment_status TEXT NOT NULL,
-  special_requests TEXT,
+  special_requests TEXT DEFAULT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -47,6 +61,7 @@ CREATE TABLE IF NOT EXISTS housekeeping_tasks (
   priority TEXT NOT NULL,
   assigned_to TEXT,
   notes TEXT,
+  scheduled_date DATE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

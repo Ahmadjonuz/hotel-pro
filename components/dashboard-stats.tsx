@@ -114,7 +114,7 @@ export function DashboardStats() {
                             <div className="h-2 w-2 rounded-full bg-rose-500" />
                             <div>Revenue</div>
                           </div>
-                          <div className="font-medium">${payload[0].value.toLocaleString()}</div>
+                          <div className="font-medium">${payload?.[0]?.value?.toLocaleString?.() ?? ""}</div>
                         </div>
                       </div>
                     )

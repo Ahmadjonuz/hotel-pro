@@ -26,6 +26,8 @@ export async function POST() {
       email TEXT,
       phone TEXT,
       address TEXT,
+      document_type TEXT,
+      document_number TEXT,
       is_vip BOOLEAN DEFAULT FALSE,
       loyalty_points INTEGER DEFAULT 0,
       notes TEXT,

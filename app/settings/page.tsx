@@ -1,7 +1,26 @@
 "use client"
 
 import { useState } from "react"
-import { Building, Globe, Hotel, Mail, Phone, Save, User, Plus } from "lucide-react"
+import { 
+  Building, 
+  Globe, 
+  Hotel, 
+  Mail, 
+  Phone, 
+  Save, 
+  User, 
+  Plus, 
+  Settings, 
+  Bell, 
+  Shield, 
+  UserCog, 
+  Palette, 
+  Languages, 
+  CreditCard,
+  Database,
+  XCircle,
+  ArrowLeft
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,249 +30,389 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { UserManagement } from "@/components/users/UserManagement"
+import { Separator } from "@/components/ui/separator"
+import { toast } from "@/components/ui/use-toast"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState("general")
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const handleSave = () => {
     setLoading(true)
     // Simulate API call
     setTimeout(() => {
       setLoading(false)
+      toast({
+        title: "Muvaffaqiyatli",
+        description: "Sozlamalar saqlandi",
+      })
     }, 1000)
   }
 
   return (
-    <div className="space-y-6 p-6 pb-16">
-      <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Sozlamalar</h2>
-        <p className="text-muted-foreground">
-          Mehmonxona sozlamalarini boshqaring
-        </p>
+    <div className="flex h-full">
+      {/* Sidebar */}
+      <div className={`border-r bg-background transition-all duration-300 ${sidebarOpen ? "w-64" : "w-0 overflow-hidden"}`}>
+        <div className="p-4 h-full flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-medium">Sozlamalar</h3>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setSidebarOpen(false)}
+              className="h-8 w-8"
+            >
+              <XCircle className="h-4 w-4" />
+              <span className="sr-only">Yopish</span>
+            </Button>
+          </div>
+          
+          <div className="space-y-6 flex-1 overflow-auto">
+            {/* System Settings */}
+            <div>
+              <h4 className="text-sm font-medium mb-3">Tizim</h4>
+              <div className="space-y-1">
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "general" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("general")}
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Umumiy
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "notifications" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("notifications")}
+                >
+                  <Bell className="h-4 w-4 mr-2" />
+                  Bildirishnomalar
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "security" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("security")}
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Xavfsizlik
+                </Button>
+              </div>
+            </div>
+            
+            <Separator />
+            
+            {/* User Management */}
+            <div>
+              <h4 className="text-sm font-medium mb-3">Foydalanuvchilar</h4>
+              <div className="space-y-1">
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "users" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("users")}
+                >
+                  <UserCog className="h-4 w-4 mr-2" />
+                  Foydalanuvchilar boshqaruvi
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "roles" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("roles")}
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Rollar va ruxsatlar
+                </Button>
+              </div>
+            </div>
+            
+            <Separator />
+            
+            {/* Appearance */}
+            <div>
+              <h4 className="text-sm font-medium mb-3">Ko'rinish</h4>
+              <div className="space-y-1">
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "theme" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("theme")}
+                >
+                  <Palette className="h-4 w-4 mr-2" />
+                  Tema va ranglar
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "language" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("language")}
+                >
+                  <Languages className="h-4 w-4 mr-2" />
+                  Til sozlamalari
+                </Button>
+              </div>
+            </div>
+            
+            <Separator />
+            
+            {/* Business Settings */}
+            <div>
+              <h4 className="text-sm font-medium mb-3">Biznes</h4>
+              <div className="space-y-1">
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "billing" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("billing")}
+                >
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  To'lov va obuna
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start ${activeTab === "backups" ? "bg-muted" : ""}`}
+                  onClick={() => setActiveTab("backups")}
+                >
+                  <Database className="h-4 w-4 mr-2" />
+                  Zaxira nusxalar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <Tabs defaultValue="general" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="general">Umumiy</TabsTrigger>
-          <TabsTrigger value="notifications">Bildirishnomalar</TabsTrigger>
-          <TabsTrigger value="security">Xavfsizlik</TabsTrigger>
-        </TabsList>
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        <div className="container mx-auto py-10">
+          <div className="flex items-center mb-6">
+            {!sidebarOpen && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setSidebarOpen(true)}
+                className="mr-4"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Sozlamalar menyusi
+              </Button>
+            )}
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" className="h-8 w-8" onClick={() => window.history.back()}>
+                <ArrowLeft className="h-4 w-4" />
+                <span className="sr-only">Orqaga</span>
+              </Button>
+              <h1 className="text-2xl font-bold">Tizim Sozlamalari</h1>
+            </div>
+          </div>
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="general">Umumiy</TabsTrigger>
+              <TabsTrigger value="notifications">Bildirishnomalar</TabsTrigger>
+              <TabsTrigger value="security">Xavfsizlik</TabsTrigger>
+              <TabsTrigger value="users">Foydalanuvchilar</TabsTrigger>
+            </TabsList>
 
-        <TabsContent value="general" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Mehmonxona ma'lumotlari</CardTitle>
-              <CardDescription>Mehmonxona tafsilotlarini yangilang</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="hotel-name">Mehmonxona nomi</Label>
-                <div className="flex items-center space-x-2">
-                  <Hotel className="h-4 w-4 text-muted-foreground" />
-                  <Input id="hotel-name" defaultValue="Grand Hotel & Spa" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Elektron pochta</Label>
-                  <div className="flex items-center space-x-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <Input id="email" type="email" defaultValue="info@grandhotel.com" />
+            <TabsContent value="general" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Tizim sozlamalari</CardTitle>
+                  <CardDescription>
+                    Asosiy tizim sozlamalarini o'zgartiring
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="dark-mode">Qorong'i rejim</Label>
+                    <Switch id="dark-mode" />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Telefon raqami</Label>
-                  <div className="flex items-center space-x-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567" />
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="notifications">Bildirishnomalar</Label>
+                    <Switch id="notifications" />
                   </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="address">Manzil</Label>
-                <div className="flex items-center space-x-2">
-                  <Building className="h-4 w-4 text-muted-foreground" />
-                  <Input id="address" defaultValue="123 Main Street" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Tavsif</Label>
-                <Textarea
-                  id="description"
-                  rows={4}
-                  defaultValue="Shahar markazida joylashgan hashamatli mehmonxona, yuqori darajadagi qulayliklar va ajoyib xizmat taklif etadi."
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Kirish/Chiqish sozlamalari</CardTitle>
-              <CardDescription>Mehmonxonangizning kirish va chiqish vaqtlarini sozlang</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="check-in-time">Kirish vaqti</Label>
-                  <Select defaultValue="14:00">
-                    <SelectTrigger id="check-in-time">
-                      <SelectValue placeholder="Vaqtni tanlang" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="12:00">12:00</SelectItem>
-                      <SelectItem value="13:00">13:00</SelectItem>
-                      <SelectItem value="14:00">14:00</SelectItem>
-                      <SelectItem value="15:00">15:00</SelectItem>
-                      <SelectItem value="16:00">16:00</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="check-out-time">Chiqish vaqti</Label>
-                  <Select defaultValue="11:00">
-                    <SelectTrigger id="check-out-time">
-                      <SelectValue placeholder="Vaqtni tanlang" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="10:00">10:00</SelectItem>
-                      <SelectItem value="11:00">11:00</SelectItem>
-                      <SelectItem value="12:00">12:00</SelectItem>
-                      <SelectItem value="13:00">13:00</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Hisob-kitob ma'lumotlari</CardTitle>
-              <CardDescription>To'lov tafsilotlarini yangilang</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="company-name">Kompaniya nomi</Label>
-                <Input id="company-name" defaultValue="Grand Hotel LLC" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="tax-id">Soliq ID / STIR raqami</Label>
-                <Input id="tax-id" defaultValue="UZ123456789" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="billing-email">Hisob-kitob elektron pochtasi</Label>
-                <Input id="billing-email" type="email" defaultValue="billing@grandhotel.com" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="billing-address">Hisob-kitob manzili</Label>
-                <Textarea
-                  id="billing-address"
-                  rows={3}
-                  defaultValue="Toshkent shahri, Mirobod tumani, Amir Temur ko'chasi, 15-uy"
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Bildirishnoma sozlamalari</CardTitle>
-              <CardDescription>Bildirishnomalarni qanday olishni sozlang</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="booking-notification" className="font-medium">
-                      Bron qilish bildirishnomalari
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      Yangi bronlar uchun bildirishnomalar oling
-                    </p>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="sound">Ovozli bildirishnomalar</Label>
+                    <Switch id="sound" />
                   </div>
-                  <Switch id="booking-notification" defaultChecked />
-                </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="auto-logout">Avtomatik chiqish (1 soatdan so'ng)</Label>
+                    <Switch id="auto-logout" />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={handleSave} disabled={loading}>
+                    {loading ? "Saqlanmoqda..." : "Saqlash"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="payment-notification" className="font-medium">
-                      To'lov bildirishnomalari
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      To'lovlar uchun elektron pochta xabarlarini oling
-                    </p>
+            <TabsContent value="notifications" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Bildirishnoma sozlamalari</CardTitle>
+                  <CardDescription>
+                    Bildirishnomalarni sozlang
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="email-notifications">Email bildirishnomalari</Label>
+                    <Switch id="email-notifications" />
                   </div>
-                  <Switch id="payment-notification" defaultChecked />
-                </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="push-notifications">Push bildirishnomalari</Label>
+                    <Switch id="push-notifications" />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="sms-notifications">SMS bildirishnomalari</Label>
+                    <Switch id="sms-notifications" />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={handleSave} disabled={loading}>
+                    {loading ? "Saqlanmoqda..." : "Saqlash"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="system-updates" className="font-medium">
-                      Tizim yangilanishlari
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      Tizim yangilanishlari va texnik xizmat ko'rsatish haqida xabarlar oling
-                    </p>
+            <TabsContent value="security" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Xavfsizlik sozlamalari</CardTitle>
+                  <CardDescription>
+                    Xavfsizlik sozlamalarini o'zgartiring
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="two-factor">Ikki bosqichli autentifikatsiya</Label>
+                    <Switch id="two-factor" />
                   </div>
-                  <Switch id="system-updates" defaultChecked />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="session-timeout">Sessiya muddati</Label>
+                    <Switch id="session-timeout" />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="ip-restriction">IP cheklovi</Label>
+                    <Switch id="ip-restriction" />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={handleSave} disabled={loading}>
+                    {loading ? "Saqlanmoqda..." : "Saqlash"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-        <TabsContent value="security" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Rol boshqaruvi</CardTitle>
-              <CardDescription>Foydalanuvchi rollarini va ruxsatlarini sozlang</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Mavjud rollar</Label>
-                <div className="rounded-md border">
-                  <div className="flex items-center justify-between p-4 border-b">
-                    <div>
-                      <p className="font-medium">Administrator</p>
-                      <p className="text-sm text-muted-foreground">To'liq tizim ruxsati</p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Ruxsatlarni tahrirlash
-                    </Button>
+            <TabsContent value="users" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Foydalanuvchilar boshqaruvi</CardTitle>
+                  <CardDescription>
+                    Tizim foydalanuvchilarini boshqaring
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <UserManagement />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            {/* Other tabs can be added here */}
+            <TabsContent value="roles" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Rollar va ruxsatlar</CardTitle>
+                  <CardDescription>
+                    Foydalanuvchi rollarini va ruxsatlarini boshqaring
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <Alert>
+                      <AlertDescription>
+                        Bu funksiya ishlab chiqilmoqda. Tez orada qo'shiladi.
+                      </AlertDescription>
+                    </Alert>
+                    <p className="text-sm text-muted-foreground">Mavjud rollar:</p>
+                    <ul className="list-disc pl-5 space-y-2">
+                      <li><strong>Administrator</strong> - Barcha operatsiyalarni bajarish huquqiga ega</li>
+                      <li><strong>Menejer</strong> - Mehmonlar va xonalarni boshqarish huquqiga ega</li>
+                      <li><strong>Qabul xodimi</strong> - Mehmonlarni ro'yxatdan o'tkazish va xonalarni ko'rish huquqiga ega</li>
+                    </ul>
                   </div>
-                  <div className="flex items-center justify-between p-4 border-b">
-                    <div>
-                      <p className="font-medium">Menejer</p>
-                      <p className="text-sm text-muted-foreground">Bronlar, xonalar va hisobotlarni boshqarish</p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Ruxsatlarni tahrirlash
-                    </Button>
-                  </div>
-                  <div className="flex items-center justify-between p-4">
-                    <div>
-                      <p className="font-medium">Qabul xodimi</p>
-                      <p className="text-sm text-muted-foreground">Kirish, chiqish va bronlarni boshqarish</p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Ruxsatlarni tahrirlash
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="theme" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Tema va ranglar</CardTitle>
+                  <CardDescription>
+                    Interfeysning tashqi ko'rinishini sozlang
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Bu funksiya ishlab chiqilmoqda.</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="language" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Til sozlamalari</CardTitle>
+                  <CardDescription>
+                    Interfeys tilini o'zgartiring
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Bu funksiya ishlab chiqilmoqda.</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="billing" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>To'lov va obuna</CardTitle>
+                  <CardDescription>
+                    To'lov va obuna sozlamalarini boshqaring
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Alert>
+                    <AlertDescription>
+                      Bu funksiya ishlab chiqilmoqda. Tez orada qo'shiladi.
+                    </AlertDescription>
+                  </Alert>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="backups" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Zaxira nusxalar</CardTitle>
+                  <CardDescription>
+                    Ma'lumotlar zaxira nusxalarini yarating va boshqaring
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Alert>
+                    <AlertDescription>
+                      Bu funksiya ishlab chiqilmoqda. Tez orada qo'shiladi.
+                    </AlertDescription>
+                  </Alert>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   )
 }

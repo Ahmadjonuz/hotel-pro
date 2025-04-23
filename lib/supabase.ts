@@ -1,35 +1,53 @@
 import { createClient } from "@supabase/supabase-js"
+import { handleSupabaseError } from "./utils"
+import type { Database } from "@/types/supabase"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
   throw new Error("Missing Supabase environment variables")
 }
 
-console.log("Supabase URL:", supabaseUrl)
-console.log("Supabase Key length:", supabaseAnonKey.length)
+// Singleton pattern for Supabase clients
+let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null
+let supabaseAdminInstance: ReturnType<typeof createClient<Database>> | null = null
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  },
-  global: {
-    headers: {
-      'x-application-name': 'hotelpro'
-    }
+export const supabase = (() => {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      },
+      global: {
+        headers: {
+          'x-application-name': 'hotelpro'
+        }
+      }
+    })
   }
-})
+  return supabaseInstance
+})()
 
-// Helper function to handle Supabase errors
-export const handleSupabaseError = (error: any) => {
-  if (error instanceof Error) {
-    return { error: error.message }
+export const supabaseAdmin = (() => {
+  if (!supabaseAdminInstance) {
+    supabaseAdminInstance = createClient<Database>(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true
+      },
+      global: {
+        headers: {
+          'x-application-name': 'hotelpro-admin'
+        }
+      }
+    })
   }
-  return { error: "An unexpected error occurred" }
-}
+  return supabaseAdminInstance
+})()
 
 // Types for our database tables
 export type Room = {
@@ -66,18 +84,26 @@ export type Booking = {
   status: string
   total_amount: number
   payment_status: string
-  special_requests: string
+  special_requests?: string | null
   created_at?: string
 }
 
 export type HousekeepingTask = {
   id: string
   room_id: string
-  status: string
-  priority: string
-  assigned_to: string
+  status: "pending" | "in_progress" | "completed" | "cancelled"
+  priority: "low" | "medium" | "high" | "urgent"
+  assigned_to: string | null
   notes: string
+  scheduled_date: string
+  completed_at?: string | null
   created_at?: string
+  updated_at?: string
+  rooms?: {
+    id: string
+    type: string
+    room_number: string
+  }
 }
 
 export type MaintenanceRequest = {
@@ -91,4 +117,6 @@ export type MaintenanceRequest = {
   notes: string
   created_at?: string
 }
+
+export { handleSupabaseError }
 
