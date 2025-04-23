@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         toast({
-          title: "Login failed",
+          title: "Xatolik yuz berdi",
           description: error.message,
           variant: "destructive",
         })
@@ -61,19 +61,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data.user)
         setSession(data.session)
         toast({
-          title: "Welcome back!",
-          description: `Logged in as ${data.user.email}`,
+          title: "Xush kelibsiz!",
+          description: `${data.user.email} sifatida tizimga kirdingiz`,
         })
       }
       
       return { error: null }
     } catch (error: any) {
       toast({
-        title: "Login failed",
-        description: "An unexpected error occurred",
+        title: "Xatolik yuz berdi",
+        description: "Kutilmagan xatolik yuz berdi",
         variant: "destructive",
       })
-      return { error: error.message || "An unexpected error occurred" }
+      return { error: error.message || "Kutilmagan xatolik yuz berdi" }
     }
   }
 
@@ -89,25 +89,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         toast({
-          title: "Registration failed",
+          title: "Ro'yxatdan o'tishda xatolik",
           description: error.message,
           variant: "destructive",
         })
       } else {
         toast({
-          title: "Registration successful",
-          description: "Please check your email to confirm your account.",
+          title: "Ro'yxatdan o'tish muvaffaqiyatli yakunlandi",
+          description: "Iltimos, hisobingizni tasdiqlash uchun emailingizni tekshiring.",
         })
       }
       
       return { error }
     } catch (error: any) {
       toast({
-        title: "Registration failed",
-        description: "An unexpected error occurred",
+        title: "Ro'yxatdan o'tishda xatolik",
+        description: "Kutilmagan xatolik yuz berdi",
         variant: "destructive",
       })
-      return { error: error.message || "An unexpected error occurred" }
+      return { error: error.message || "Kutilmagan xatolik yuz berdi" }
     }
   }
 
@@ -118,12 +118,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null)
         setSession(null)
         toast({
-          title: "Logged out",
-          description: "You have been successfully logged out",
+          title: "Tizimdan chiqdingiz",
+          description: "Siz muvaffaqiyatli tizimdan chiqdingiz",
         })
       } else {
         toast({
-          title: "Logout failed",
+          title: "Xatolik yuz berdi",
           description: error.message,
           variant: "destructive",
         })
@@ -131,11 +131,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { error }
     } catch (error: any) {
       toast({
-        title: "Logout failed",
-        description: "An unexpected error occurred",
+        title: "Xatolik yuz berdi",
+        description: "Kutilmagan xatolik yuz berdi",
         variant: "destructive",
       })
-      return { error: error.message || "An unexpected error occurred" }
+      return { error: error.message || "Kutilmagan xatolik yuz berdi" }
     }
   }
 
@@ -147,25 +147,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         toast({
-          title: "Password reset failed",
+          title: "Parolni tiklashda xatolik",
           description: error.message,
           variant: "destructive",
         })
       } else {
         toast({
-          title: "Password reset email sent",
-          description: "Please check your email for the password reset link.",
+          title: "Parolni tiklash xati yuborildi",
+          description: "Iltimos, parolni tiklash havolasi uchun emailingizni tekshiring.",
         })
       }
       
       return { error }
     } catch (error: any) {
       toast({
-        title: "Password reset failed",
-        description: "An unexpected error occurred",
+        title: "Parolni tiklashda xatolik",
+        description: "Kutilmagan xatolik yuz berdi",
         variant: "destructive",
       })
-      return { error: error.message || "An unexpected error occurred" }
+      return { error: error.message || "Kutilmagan xatolik yuz berdi" }
     }
   }
 

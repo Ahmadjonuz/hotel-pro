@@ -19,7 +19,7 @@ export default function HomePage() {
     setLoading(true)
 
     try {
-      toast.info("Logging in...")
+      toast.info("Tizimga kirish...")
       
       // Reset any previous session
       await supabase.auth.signOut()
@@ -31,13 +31,13 @@ export default function HomePage() {
       })
 
       if (error) {
-        toast.error(`Login failed: ${error.message}`)
+        toast.error(`Xatolik yuz berdi: ${error.message}`)
         console.error("Login error:", error)
         return
       }
 
       if (!data.session) {
-        toast.error("No session data returned")
+        toast.error("Sessiya ma'lumotlari topilmadi")
         console.error("No session data")
         return
       }
@@ -46,14 +46,14 @@ export default function HomePage() {
       document.cookie = `sb-access-token=${data.session.access_token};path=/;max-age=86400;SameSite=Lax`
       document.cookie = `sb-refresh-token=${data.session.refresh_token};path=/;max-age=86400;SameSite=Lax`
       
-      toast.success("Login successful!")
+      toast.success("Tizimga muvaffaqiyatli kirdingiz!")
       
       // Hard redirect
       setTimeout(() => {
         window.location.href = "/dashboard"
       }, 1000)
     } catch (error: any) {
-      toast.error(`Unexpected error: ${error.message}`)
+      toast.error(`Kutilmagan xatolik: ${error.message}`)
       console.error("Login exception:", error)
     } finally {
       setLoading(false)
@@ -63,6 +63,7 @@ export default function HomePage() {
   return (
     <>
       <Head>
+        <title>Hotel Pro - Tizimga kirish</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
       </Head>
       <style jsx global>{`
@@ -151,8 +152,8 @@ export default function HomePage() {
       <div className="login-page">
         <div className="login-card">
           <div className="login-header">
-            <h3 className="login-title">Hotel Pro Login</h3>
-            <p className="login-description">Enter your credentials to access the dashboard</p>
+            <h3 className="login-title text-center">Hotel Pro - Tizimga kirish</h3>
+            <p className="login-description text-center">Boshqaruv paneliga kirish uchun ma'lumotlaringizni kiriting</p>
           </div>
           <div className="login-body">
             <form onSubmit={handleLogin}>
@@ -169,7 +170,7 @@ export default function HomePage() {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="password" className="form-label">Password</label>
+                <label htmlFor="password" className="form-label">Parol</label>
                 <input
                   id="password"
                   type="password"
@@ -185,12 +186,12 @@ export default function HomePage() {
                 className="login-button" 
                 disabled={loading}
               >
-                {loading ? "Logging in..." : "Login"}
+                {loading ? "Kirish..." : "Kirish"}
               </button>
               
-              <div className="form-hint">
-                Default admin: admin@hotel.com / admin2125
-              </div>
+              {/* <div className="form-hint">
+                Standart admin: admin@hotel.com / admin2125
+              </div> */}
             </form>
           </div>
         </div>

@@ -28,13 +28,13 @@ export default function LoginPage() {
       })
 
       if (error) {
-        toast.error(`Login failed: ${error.message}`)
+        toast.error(`Xatolik yuz berdi: ${error.message}`)
         console.error("Login error:", error)
         return
       }
 
       if (!data.session) {
-        toast.error("No session data returned")
+        toast.error("Sessiya ma'lumotlari topilmadi")
         console.error("No session data")
         return
       }
@@ -43,14 +43,14 @@ export default function LoginPage() {
       document.cookie = `sb-access-token=${data.session.access_token};path=/;max-age=86400;SameSite=Lax`
       document.cookie = `sb-refresh-token=${data.session.refresh_token};path=/;max-age=86400;SameSite=Lax`
       
-      toast.success("Login successful!")
+      toast.success("Tizimga muvaffaqiyatli kirdingiz!")
       
       // Hard redirect
       setTimeout(() => {
         window.location.href = "/dashboard"
       }, 500)
     } catch (error: any) {
-      toast.error(`Unexpected error: ${error.message}`)
+      toast.error(`Kutilmagan xatolik: ${error.message}`)
       console.error("Login exception:", error)
     } finally {
       setLoading(false)
@@ -61,8 +61,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Enter your credentials to access the system</CardDescription>
+          <CardTitle>Tizimga kirish</CardTitle>
+          <CardDescription>Tizimga kirish uchun ma'lumotlaringizni kiriting</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -78,7 +78,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Parol</Label>
               <Input
                 id="password"
                 type="password"
@@ -89,7 +89,7 @@ export default function LoginPage() {
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
+              {loading ? "Kirish..." : "Kirish"}
             </Button>
           </form>
         </CardContent>
